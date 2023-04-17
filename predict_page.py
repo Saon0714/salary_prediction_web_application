@@ -1,6 +1,7 @@
 import streamlit as st
 import pickle
 import numpy as np
+from PIL import Image
 
 def load_model():
     with open('saved_steps.pkl', 'rb') as file:
@@ -18,10 +19,12 @@ le_sector = data["le_sector"]
 le_title = data["le_title"]
 le_seniority = data["le_seniority"]
 
+image = Image.open('C:\Projects\Salary_Prediction\salary.jpg')
+
 def show_predict_page():
     st.title("Data Scientist Salary Prediction")
 
-    st.write("""### We need some information to predict the salary""")
+    # st.write("""### We need some information to predict the salary""")
 
     Location = (
        "New York, NY",
@@ -62,15 +65,21 @@ def show_predict_page():
         'jr', 'sr'
     )
 
-    Location = st.selectbox("Location", Location)
-    size = st.selectbox("Size", size)
-    type_of_ownership = st.selectbox("Ownership Type", type_of_ownership)
-    sector = st.selectbox("Sector", sector)
-    job_title = st.selectbox("Designation", job_title)
-    job_seniority = st.selectbox("Job Seniority", job_seniority)
+    col1, col2 = st.columns(2)
 
+    with col1:
 
-    ok = st.button("Calculate Salary")
+        Location = st.selectbox("Location", Location)
+        size = st.selectbox("Size", size)
+        type_of_ownership = st.selectbox("Ownership Type", type_of_ownership)
+        sector = st.selectbox("Sector", sector)
+        job_title = st.selectbox("Designation", job_title)
+        job_seniority = st.selectbox("Job Seniority", job_seniority)
+
+    with col2:
+        st.image(image, clamp=True, channels='RGB', output_format='auto')
+
+    ok = st.button("Calculate Salary",help = "Click here to see the estimated salary")
     if ok:
         X = np.array([[Location, size, type_of_ownership ,sector,job_title,job_seniority]])
         X[:, 0] = le_location.transform(X[:,0])
@@ -82,4 +91,5 @@ def show_predict_page():
         X = X.astype(float)
 
         salary = regressor.predict(X)
+        # st.balloons()
         st.subheader(f"The estimated salary is ${salary[0]:.2f}K")
