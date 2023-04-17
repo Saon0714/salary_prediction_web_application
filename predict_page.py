@@ -19,7 +19,7 @@ le_sector = data["le_sector"]
 le_title = data["le_title"]
 le_seniority = data["le_seniority"]
 
-image = Image.open('C:\Projects\Salary_Prediction\salary.jpg')
+image = Image.open('salary.jpg')
 
 def show_predict_page():
     st.title("Data Scientist Salary Prediction")
